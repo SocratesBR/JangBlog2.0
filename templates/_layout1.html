@@ -32,6 +32,7 @@ com o mesmo conteúdo original herdado de _base.html
 
 {% block main %}
   <div class="container">
+    {% include 'messages.html' %}
     {% block content %}
       <p>Conteúdo padrão...</p>
     {% endblock content %}
@@ -54,3 +55,11 @@ com o mesmo conteúdo original herdado de _base.html
   <!-- JS do Projeto -->
   <script src="{% static 'js/base.js' %}"></script>
 {% endblock %}
+
+{% if user.is_authenticated %} {# objeto user sempre está disponível nos templates #}
+  <a class="p-2 text-dark" href="{% url 'account_edit' pk=user.pk %}">Minha conta</a>  
+  <a class="p-2 text-dark" href="{% url 'logout' %}">Sair</a>
+{% else %}
+  <a class="p-2 text-dark" href="{% url 'signup' %}">Cadastrar</a>
+  <a class="p-2 text-dark" href="{% url 'login' %}">Acessar</a>
+{% endif %}

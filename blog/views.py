@@ -1,5 +1,8 @@
 import json
 
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib import messages
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import DetailView, ListView, TemplateView
 from django.core import serializers
@@ -15,6 +18,7 @@ from django.views.decorators.csrf import csrf_exempt
 from blog.models import Post # Acrescentar
 from blog.forms import PostModelForm
 
+@login_required # controle de acesso usando o decorador de função
 def index(request):
     # return HttpResponse('Olá Django - index')
     # return render(request, 'index.html')
@@ -66,12 +70,17 @@ def get_post(request, post_id):
 
     return response
 
-class PostCreateView(CreateView):
+class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
     template_name = 'post/post_form.html'
     #fields = ('body_text', )
-    success_url = reverse_lazy('posts_list')
+    success_url = reverse_lazy('posts_all') # A rota de sucesso foi alterada
     form_class = PostModelForm
+    success_message = 'Postagem salva com sucesso.'
+    
+    def form_valid(self, request, *args, **kwargs):
+        messages.success(self.request, self.success_message)
+        return super(PostCreateView, self).form_valid(request, *args, **kwargs)
 
 @csrf_exempt
 def create_post(request):
