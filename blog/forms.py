@@ -26,7 +26,7 @@ class Meta: # é uma classe mas está dentro do PostModelForm
     model = Post
     fields = ('body_text', 'pub_date', 'categoria')
     widgets = {
-        'pub_date': forms.widgets.DateInput(attrs={'type': 'date'}),
+        'pub_date': forms.widgets.DateInput(format='%Y-%m-%d', attrs={'type': 'date'}),
         'categoria': forms.RadioSelect(),
     }
     labels = { 'body_text': '', 'categoria': 'Assunto'}
